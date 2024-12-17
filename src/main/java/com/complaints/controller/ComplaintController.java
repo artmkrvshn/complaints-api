@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,15 @@ public class ComplaintController {
     @Operation(summary = "Get all complaints", description = "Returns a list of all complaints.")
     @ApiResponse(responseCode = "200", description = "Successful operation, returns a list of complaints", content = @Content(schema = @Schema(implementation = ComplaintResponse.class)))
     @GetMapping()
-    public ResponseEntity<List<ComplaintResponse>> getComplaints() {
-        List<ComplaintResponse> complaints = complaintService.findAll();
+    public ResponseEntity<List<ComplaintResponse>> getComplaints(@RequestParam(value = "page", required = false) Integer page,
+                                                                 @RequestParam(value = "size", required = false) Integer size,
+                                                                 @RequestParam(value = "sort", required = false) String sort) {
+        if (page == null || size == null || sort == null || sort.isBlank()) {
+            List<ComplaintResponse> complaints = complaintService.findAll();
+            return ResponseEntity.ok(complaints);
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sort));
+        List<ComplaintResponse> complaints = complaintService.findAll(pageRequest);
         return ResponseEntity.ok(complaints);
     }
 

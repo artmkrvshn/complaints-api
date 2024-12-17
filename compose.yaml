@@ -1,15 +1,17 @@
 services:
   complaints-api:
     container_name: complaints-api
-    image: ghcr.io/artmkrvshn/complaints-api:latest
+    image: docker.io/artmkrvshn/complaints-api
     environment:
       spring.datasource.url: jdbc:postgresql://postgres:5432/complaints
+      spring.docker.compose.enabled: false
     ports:
       - 8080:8080
     networks:
       - complaints-api-network
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: 'postgres:16.3'
@@ -19,6 +21,8 @@ services:
       POSTGRES_PASSWORD: admin
     ports:
       - 5433:5432
+    networks:
+      - complaints-api-network
     volumes:
       - postgres:/var/lib/postgresql/data
     healthcheck:

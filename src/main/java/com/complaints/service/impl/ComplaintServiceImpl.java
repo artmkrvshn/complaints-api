@@ -14,6 +14,7 @@ import com.complaints.security.UserDetailsImpl;
 import com.complaints.service.ComplaintService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +40,15 @@ public class ComplaintServiceImpl implements ComplaintService {
     public List<ComplaintResponse> findAll() {
         log.info("Getting all complaints");
         List<Complaint> complaints = repo.findAll();
+        return complaints.stream()
+                .map(this::map)
+                .toList();
+    }
+
+    @Override
+    public List<ComplaintResponse> findAll(PageRequest pageRequest) {
+        log.info("Getting all complaints with pagination: {}", pageRequest);
+        List<Complaint> complaints = repo.findAll(pageRequest).getContent();
         return complaints.stream()
                 .map(this::map)
                 .toList();
@@ -82,9 +92,8 @@ public class ComplaintServiceImpl implements ComplaintService {
             throw new UnableToModifyException("Cannot update complaint with status " + currentStatus + ".");
         }
 
-        complaintToUpdate.setProductId(updateRequest.getProductId());
-        complaintToUpdate.setDescription(updateRequest.getDescription());
-        complaintToUpdate.setStatus(updateRequest.getStatus());
+        complaintToUpdate = this.map(updateRequest);
+
         Complaint complaint = repo.save(complaintToUpdate);
         return this.map(complaint);
     }
@@ -101,6 +110,15 @@ public class ComplaintServiceImpl implements ComplaintService {
         complaint.setProductId(request.getProductId());
         complaint.setCustomer(getAuthenticatedCustomer());
         complaint.setDate(request.getDate());
+        complaint.setDescription(request.getDescription());
+        complaint.setStatus(request.getStatus());
+        return complaint;
+    }
+
+    private Complaint map(ComplaintUpdateRequest request) {
+        Complaint complaint = new Complaint();
+        complaint.setProductId(request.getProductId());
+        complaint.setCustomer(getAuthenticatedCustomer());
         complaint.setDescription(request.getDescription());
         complaint.setStatus(request.getStatus());
         return complaint;

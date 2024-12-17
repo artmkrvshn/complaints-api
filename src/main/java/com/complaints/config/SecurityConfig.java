@@ -25,7 +25,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/complaints/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/complaints/*").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/complaints", "/api/v1/complaints/*").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .httpBasic(withDefaults());
         return http.build();
     }
