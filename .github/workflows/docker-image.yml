@@ -22,7 +22,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Grant execute permission to Gradlew
         run: chmod +x ./gradlew
