@@ -58,7 +58,7 @@ tasks.named('test') {
 }
 
 jib {
-    to.image = "ghcr.io/artmkrvshn/${project.name}:latest"
-    from.image = "eclipse-temurin:21-jre"
+    to.image = "docker.io/artmkrvshn/${project.name}:latest"
+    from.image = "eclipse-temurin:21-jre-alpine"
     container.creationTime = "USE_CURRENT_TIMESTAMP"
 }
