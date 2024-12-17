@@ -191,3 +191,7 @@ cd complaints-api
 ### **Test Containers**
 
 Integration tests use Testcontainers for an isolated PostgreSQL environment.
+
+### **Code Coverage**
+
+The current code coverage for this project is **85%**.
