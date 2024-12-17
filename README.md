@@ -160,7 +160,7 @@ Use the following credentials to access the secured endpoints:
 ### Swagger UI
 
 Access API documentation at:  
-`http://localhost:8080/swagger-ui/index.html`
+http://localhost:8080/swagger-ui/index.html
 
 ---
 
